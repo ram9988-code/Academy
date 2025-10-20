@@ -39,6 +39,10 @@ import { AdminGetCourseType } from "@/app/data/admin/admin-get-course";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { reorderChapters, reorderLessons } from "../edit/action";
+import NewChapterModal from "./new-chapter-modal";
+import NewLessonModal from "./new-lesson-modal";
+import DeleteLesson from "./delete-lesson";
+import DeleteChapter from "./delete-chapter";
 
 interface CourseStructureProps {
   data: AdminGetCourseType;
@@ -284,6 +288,7 @@ function CourseStructure({ data }: CourseStructureProps) {
       <Card>
         <CardHeader className="flex-row flex justify-between items-center border-b border-border">
           <CardTitle>Chapters</CardTitle>
+          <NewChapterModal courseId={data.id} />
         </CardHeader>
         <CardContent className="space-y-8">
           <SortableContext strategy={verticalListSortingStrategy} items={items}>
@@ -310,26 +315,24 @@ function CourseStructure({ data }: CourseStructureProps) {
                             <GripVertical className="size-4" />
                           </Button>
 
-                          <CollapsibleTrigger>
-                            {/* <Button
+                          <CollapsibleTrigger asChild>
+                            <Button
                               size={"icon"}
                               variant={"ghost"}
                               className="flex items-center"
-                            > */}
-                            {item.isOpen ? (
-                              <ChevronDown className="size-4" />
-                            ) : (
-                              <ChevronRight className="size-4" />
-                            )}
-                            {/* </Button> */}
+                            >
+                              {item.isOpen ? (
+                                <ChevronDown className="size-4" />
+                              ) : (
+                                <ChevronRight className="size-4" />
+                              )}
+                            </Button>
                           </CollapsibleTrigger>
                           <p className="cursor-pointer hover:text-primary">
                             {item.title}
                           </p>
                         </div>
-                        <Button size={"icon"} variant={"outline"}>
-                          <Trash2 className="size-4" />
-                        </Button>
+                        <DeleteChapter chapterId={item.id} courseId={data.id} />
                       </div>
                       <CollapsibleContent>
                         <div className="p-1">
@@ -360,18 +363,21 @@ function CourseStructure({ data }: CourseStructureProps) {
                                         {lesson.title}
                                       </Link>
                                     </div>
-                                    <Button variant={"outline"} size={"icon"}>
-                                      <Trash2 className="size-4" />
-                                    </Button>
+                                    <DeleteLesson
+                                      chapterId={item.id}
+                                      courseId={data.id}
+                                      lessonId={lesson.id}
+                                    />
                                   </div>
                                 )}
                               </SortableItem>
                             ))}
                           </SortableContext>
-                          <div>
-                            <Button variant={"outline"} className="w-full">
-                              Create New Lesson
-                            </Button>
+                          <div className="p-2">
+                            <NewLessonModal
+                              chapterId={item.id}
+                              courseId={data.id}
+                            />
                           </div>
                         </div>
                       </CollapsibleContent>

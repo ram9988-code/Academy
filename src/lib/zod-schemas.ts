@@ -52,4 +52,27 @@ export const courseSchema = z.object({
   ),
 });
 
+export const chapterSchema = z.object({
+  name: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters long" }),
+  courseId: z.string().uuid({ message: "Invalid couse id" }),
+});
+
+export const lessonSchema = z.object({
+  name: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters long." }),
+  courseId: z.string().uuid({ message: "Invalid course Id" }),
+  chapterId: z.string().uuid({ message: "Invailid chapter Id" }),
+  description: z
+    .string()
+    .min(3, { message: "Description must be at least 3 characters long." })
+    .optional(),
+  thumbnailKay: z.string().optional(),
+  videoKey: z.string().optional(),
+});
+
+export type ChapterSchemaType = z.infer<typeof chapterSchema>;
 export type CourseSchemaType = z.infer<typeof courseSchema>;
+export type LessonSchemaType = z.infer<typeof lessonSchema>;
