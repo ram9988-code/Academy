@@ -53,7 +53,7 @@ function AdminCourseCard({ data }: AdminCourseCardProps) {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href={`/admin/cournse/${data.id}/delete`}>
+              <Link href={`/admin/courses/${data.id}/delete`}>
                 <Trash className="size-4 mr-2 text-destructive" />
                 Delete Course
               </Link>
