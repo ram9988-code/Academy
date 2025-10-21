@@ -9,6 +9,7 @@ import {
 import EditCourseForm from "../_components/edit-course-form";
 import CourseStructure from "../_components/course-structure";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CourseIdEditBreadcrumb } from "../_components/course-id-breadcrumb";
 
 type Params = Promise<{ courseId: string }>;
 async function CourseEditPage({ params }: { params: Params }) {
@@ -17,7 +18,8 @@ async function CourseEditPage({ params }: { params: Params }) {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-3">
+      <CourseIdEditBreadcrumb courseId={courseId} />
+      <h1 className="text-3xl font-bold my-3">
         Edit Course:{" "}
         <span className="text-primary underline">{data.title}</span>
       </h1>

@@ -213,6 +213,7 @@ function CreateCoursePage() {
                       <FileUploader
                         onChange={field.onChange}
                         value={field.value}
+                        fileTypeAccepted="image"
                       />
                       {/* <Input placeholder="Thubnail Url" {...field} /> */}
                     </FormControl>

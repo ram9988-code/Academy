@@ -174,7 +174,11 @@ function EditCourseForm({ data }: EditCourseFormProps) {
             <FormItem className="w-full">
               <FormLabel>Thumbnail image</FormLabel>
               <FormControl>
-                <FileUploader onChange={field.onChange} value={field.value} />
+                <FileUploader
+                  fileTypeAccepted="image"
+                  onChange={field.onChange}
+                  value={field.value}
+                />
                 {/* <Input placeholder="Thubnail Url" {...field} /> */}
               </FormControl>
               <FormMessage />

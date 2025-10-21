@@ -6,14 +6,12 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { S3 } from "@/lib/s3-client";
 import arcjet, { detectBot, fixedWindow } from "@/lib/arcjet";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import { requireAdmin } from "@/app/data/admin/require-admin";
 
 export const fileUploadSchema = z.object({
   fileName: z.string().min(1, "File name is required"),
   contentType: z.string().min(1, "Content type is required"),
-  size: z.number().max(5 * 1024 * 1024, "File size should be less than 5MB"),
+  size: z.number().max(50 * 1024 * 1024, "File size should be less than 50MB"),
   isImage: z.boolean(),
 });
 
@@ -65,14 +63,14 @@ export async function POST(req: Request) {
       ContentType: contentType,
     });
 
-    const preSignedURL = await getSignedUrl(S3, command, { expiresIn: 3600 });
+    const preSignedURL = await getSignedUrl(S3, command);
 
     return NextResponse.json({
       preSignedURL,
       key: uniqueKey,
     });
   } catch (error) {
-    console.error("Presigned URL generation failed:", error);
+    console.log("Presigned URL generation failed:", error);
     return NextResponse.json(
       { error: "Failed to generate pre-signed URL" },
       { status: 500 }

@@ -23,26 +23,31 @@ interface UploaderProps {
   isDeleteing: boolean;
   error: boolean;
   objectUrl?: string;
-  fileType: "image";
+  fileType: "image" | "video";
 }
 
 interface FileUploaderProps {
   value?: string;
   onChange?: (url: string) => void;
+  fileTypeAccepted: "image" | "video";
 }
 
-function FileUploader({ onChange, value }: FileUploaderProps) {
+function FileUploader({
+  onChange,
+  value,
+  fileTypeAccepted,
+}: FileUploaderProps) {
   const fileUrl = useConstructUrl(value || "");
 
   const [fileState, setFileState] = useState<UploaderProps>({
     error: false,
     file: null,
-    fileType: "image",
+    fileType: fileTypeAccepted,
     id: null,
     isDeleteing: false,
     progress: 0,
     uploading: false,
-    objectUrl: fileUrl,
+    objectUrl: value ? fileUrl : undefined,
     key: value,
   });
 
@@ -64,7 +69,7 @@ function FileUploader({ onChange, value }: FileUploaderProps) {
           fileName: file.name,
           contentType: file.type,
           size: file.size,
-          isImage: true,
+          isImage: fileTypeAccepted === "image" ? true : false,
         }),
       });
 
@@ -143,12 +148,12 @@ function FileUploader({ onChange, value }: FileUploaderProps) {
           error: false,
           id: uuidv4(),
           isDeleteing: false,
-          fileType: "image",
+          fileType: fileTypeAccepted,
         }));
         uploadFile(file);
       }
     },
-    [fileState.objectUrl]
+    [fileState.objectUrl, uploadFile, fileTypeAccepted]
   );
 
   async function handleRemoveFile() {
@@ -192,7 +197,7 @@ function FileUploader({ onChange, value }: FileUploaderProps) {
         error: false,
         id: null,
         isDeleteing: false,
-        fileType: "image",
+        fileType: fileTypeAccepted,
       }));
 
       toast.success("File deleted successfully");
@@ -238,7 +243,7 @@ function FileUploader({ onChange, value }: FileUploaderProps) {
       return <RenderErrorState />;
     }
 
-    if (!fileState.file) {
+    if (!fileState.objectUrl) {
       return <RenderEmptyState isDragActive={isDragActive} />;
     }
     return (
@@ -246,6 +251,7 @@ function FileUploader({ onChange, value }: FileUploaderProps) {
         previewURL={fileState.objectUrl!}
         handleRemoveFile={handleRemoveFile}
         isDeleting={fileState.isDeleteing}
+        fileType={fileTypeAccepted}
       />
     );
   }
@@ -260,10 +266,11 @@ function FileUploader({ onChange, value }: FileUploaderProps) {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: { "image/*": [] },
+    accept:
+      fileTypeAccepted === "video" ? { "video/*": [] } : { "image/*": [] },
     maxFiles: 1,
     multiple: false,
-    maxSize: 5 * 1024 * 1024, // 5MB
+    maxSize: fileTypeAccepted === "video" ? 500 * 1024 * 1024 : 5 * 1024 * 1024, // 5MB
     onDropRejected: rejectedFile,
     disabled: fileState.uploading || fileState.isDeleteing,
   });
@@ -272,7 +279,8 @@ function FileUploader({ onChange, value }: FileUploaderProps) {
     <Card
       {...getRootProps()}
       className={cn(
-        "relative border-2 border-dashed transition-colors duration-200 ease-in-out w-full h-100",
+        "relative border-2 border-dashed transition-colors duration-200 ease-in-out w-full",
+        fileTypeAccepted === "image" ? "h-120" : "h-full",
         isDragActive
           ? "border-primary bg-primary/10 border-solid"
           : "border-border hover:border-primary"
