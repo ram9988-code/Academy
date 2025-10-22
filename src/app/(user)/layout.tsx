@@ -7,7 +7,9 @@ function Publiclayout({ children }: { children: React.ReactNode }) {
       <div>
         <Navbar />
       </div>
-      <main className="container mx-auto px-4 md:px-6 lg:px-8">{children}</main>
+      <main className="container mx-auto px-4 mb-32 md:px-6 lg:px-8">
+        {children}
+      </main>
     </div>
   );
 }
