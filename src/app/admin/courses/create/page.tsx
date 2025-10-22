@@ -52,9 +52,11 @@ import { tryCatch } from "@/hooks/try-catch";
 import { createCourse } from "./actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useConfetti } from "@/hooks/use-confetti";
 
 function CreateCoursePage() {
   const router = useRouter();
+  const { triggerConfetti } = useConfetti();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<CourseSchemaType>({
@@ -74,7 +76,6 @@ function CreateCoursePage() {
   });
 
   function onSubmit(values: CourseSchemaType) {
-    // console.log(values);
     startTransition(async () => {
       const { data: result, error } = await tryCatch(createCourse(values));
 
@@ -87,6 +88,7 @@ function CreateCoursePage() {
 
       if (result.status === "success") {
         toast.success(result.message);
+        triggerConfetti();
         form.reset();
         router.push("/admin/courses");
       } else if (result.status === "error") {
