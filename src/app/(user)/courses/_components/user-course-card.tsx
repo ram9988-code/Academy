@@ -12,8 +12,7 @@ import React from "react";
 function UserCourseCard({
   level,
   fileKey,
-  id,
-  price,
+  slug,
   duration,
   category,
   title,
@@ -32,7 +31,7 @@ function UserCourseCard({
       />
       <CardContent className="p-4">
         <Link
-          href={`/courses/${id}`}
+          href={`/courses/${slug}`}
           className="font-medium text-lg line-clamp-2 hover:underline group-hover:text-primary transition-colors"
         >
           {title}
@@ -51,7 +50,7 @@ function UserCourseCard({
           </div>
         </div>
         <Link
-          href={`/courses/${id}`}
+          href={`/courses/${slug}`}
           className={buttonVariants({ className: "w-full mt-4" })}
         >
           Learn More
